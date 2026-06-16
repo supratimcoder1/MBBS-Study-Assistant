@@ -110,12 +110,7 @@ The codebase has been reorganized into a modular, clean, and production-ready la
         ```
 
 6.  **Seed the Admin Account:**
-    Generate an `admin_credentials.txt` file in the root with your desired email and password:
-    ```text
-    Email: admin@mbbs.com
-    Password: SecureAdminPassword123
-    ```
-    Then run the admin seeding utility:
+    Run the admin seeding utility to register the default system administrator:
     ```bash
     python scripts/seed_admin.py
     ```
