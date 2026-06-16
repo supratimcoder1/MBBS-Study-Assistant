@@ -45,20 +45,118 @@ App.Utils = {
     return div.innerHTML;
   },
 
-  /** Simple Markdown-like rendering (bold, italic, code, line breaks) */
+  /** Simple Markdown-like rendering (bold, italic, code, list items, headings, line breaks) */
   renderContent(text) {
     if (!text) return '';
     let html = App.Utils.escapeHtml(text);
-    // Code blocks ```...```
-    html = html.replace(/```([\s\S]*?)```/g, '<pre style="background:rgba(0,0,0,0.3);padding:0.75rem;border-radius:8px;overflow-x:auto;margin:0.5rem 0;font-size:0.8rem;">$1</pre>');
-    // Inline code `...`
-    html = html.replace(/`([^`]+)`/g, '<code style="background:rgba(0,0,0,0.3);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.8rem;">$1</code>');
-    // Bold **...**
+    
+    // 1. Extract code blocks ```...```
+    const codeBlocks = [];
+    html = html.replace(/```([\s\S]*?)```/g, (match, code) => {
+      const id = `__CODE_BLOCK_${codeBlocks.length}__`;
+      codeBlocks.push(code);
+      return id;
+    });
+    
+    // 2. Extract inline code `...`
+    const inlineCodes = [];
+    html = html.replace(/`([^`]+)`/g, (match, code) => {
+      const id = `__INLINE_CODE_${inlineCodes.length}__`;
+      inlineCodes.push(code);
+      return id;
+    });
+
+    // 3. Headings (###, ##, #)
+    html = html.replace(/^### (.*$)/gim, '<h3 style="margin-top: 1rem; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 1.1rem;">$1</h3>');
+    html = html.replace(/^## (.*$)/gim, '<h2 style="margin-top: 1.25rem; margin-bottom: 0.5rem; font-weight: 600; color: var(--text-primary); font-size: 1.25rem;">$1</h2>');
+    html = html.replace(/^# (.*$)/gim, '<h1 style="margin-top: 1.5rem; margin-bottom: 0.75rem; font-weight: 700; color: var(--text-primary); font-size: 1.4rem;">$1</h1>');
+
+    // 4. Bold **...**
     html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-    // Italic *...*
-    html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-    // Line breaks
-    html = html.replace(/\n/g, '<br>');
+    
+    // 5. Italic *...* (avoid matching bullet points)
+    html = html.replace(/\*(?!\s)([^*]+?)(?<!\s)\*/g, '<em>$1</em>');
+
+    // 6. Lists (unordered * / - and ordered 1. 2. )
+    const lines = html.split('\n');
+    let inList = false;
+    let listType = null; // 'ul' or 'ol'
+    const processedLines = [];
+
+    for (let i = 0; i < lines.length; i++) {
+      const line = lines[i];
+      
+      const bulletMatch = line.match(/^(\s*)[*+-]\s+(.+)$/);
+      const orderedMatch = line.match(/^(\s*)\d+\.\s+(.+)$/);
+
+      if (bulletMatch) {
+        if (!inList || listType !== 'ul') {
+          if (inList) {
+            processedLines.push(`</${listType}>`);
+          }
+          processedLines.push('<ul style="margin: 0.5rem 0; padding-left: 1.25rem; list-style-type: disc;">');
+          inList = true;
+          listType = 'ul';
+        }
+        processedLines.push(`<li style="margin-bottom: 0.25rem; color: var(--text-primary);">${bulletMatch[2]}</li>`);
+      } else if (orderedMatch) {
+        if (!inList || listType !== 'ol') {
+          if (inList) {
+            processedLines.push(`</${listType}>`);
+          }
+          processedLines.push('<ol style="margin: 0.5rem 0; padding-left: 1.25rem; list-style-type: decimal;">');
+          inList = true;
+          listType = 'ol';
+        }
+        processedLines.push(`<li style="margin-bottom: 0.25rem; color: var(--text-primary);">${orderedMatch[2]}</li>`);
+      } else {
+        if (inList) {
+          processedLines.push(`</${listType}>`);
+          inList = false;
+          listType = null;
+        }
+        processedLines.push(line);
+      }
+    }
+    if (inList) {
+      processedLines.push(`</${listType}>`);
+    }
+
+    html = processedLines.join('\n');
+
+    // 7. Line breaks (preserve newlines as br, but avoid double spacing around block elements)
+    const linesForBreaks = html.split('\n');
+    const finalLines = [];
+    for (let i = 0; i < linesForBreaks.length; i++) {
+      const current = linesForBreaks[i];
+      const next = linesForBreaks[i + 1];
+      
+      if (current.trim() === '') {
+        finalLines.push('<div style="height: 0.5rem;"></div>');
+        continue;
+      }
+      
+      const isCurrentBlock = /^\s*<\/?(ul|ol|li|h\d|pre|div)/i.test(current.trim());
+      const isNextBlock = next ? /^\s*<\/?(ul|ol|li|h\d|pre|div)/i.test(next.trim()) : true;
+      
+      if (isCurrentBlock || isNextBlock) {
+        finalLines.push(current);
+      } else {
+        finalLines.push(current + '<br>');
+      }
+    }
+    html = finalLines.join('\n');
+
+    // 8. Restore inline code (using a callback to safely handle '$' signs in the code content)
+    inlineCodes.forEach((code, index) => {
+      html = html.replace(`__INLINE_CODE_${index}__`, () => `<code style="background:rgba(0,0,0,0.3);padding:0.15rem 0.4rem;border-radius:4px;font-size:0.85rem;font-family:monospace;">${code}</code>`);
+    });
+
+    // 9. Restore code blocks (using a callback to safely handle '$' signs in the code content)
+    codeBlocks.forEach((code, index) => {
+      html = html.replace(`__CODE_BLOCK_${index}__`, () => `<pre style="background:rgba(0,0,0,0.3);padding:0.75rem;border-radius:8px;overflow-x:auto;margin:0.5rem 0;font-size:0.8rem;font-family:monospace;white-space:pre-wrap;">${code}</pre>`);
+    });
+
     return html;
   },
 
