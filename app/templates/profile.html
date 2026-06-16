@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block title %}Profile — MBBS Study Assistant{% endblock %}
+
+{% block content %}
+<div class="profile-page" id="profile-page">
+
+  <!-- Profile Card -->
+  <div class="card profile-card" id="profile-card">
+    <div class="profile-card-header">
+      <div class="profile-avatar" id="profile-avatar">?</div>
+      <div>
+        <h2 id="profile-display-name">Loading...</h2>
+        <p id="profile-display-email">Loading...</p>
+      </div>
+    </div>
+
+    <form id="profile-form" onsubmit="App.Profile.saveProfile(event)">
+      <div class="form-group">
+        <label class="form-label" for="profile-name">Full Name</label>
+        <input type="text" id="profile-name" class="form-input" placeholder="Your name" required>
+      </div>
+
+      <div class="profile-form-row">
+        <div class="form-group">
+          <label class="form-label" for="profile-year">Year</label>
+          <select id="profile-year" class="form-input" required>
+            <option value="1">1st Year</option>
+            <option value="2">2nd Year</option>
+            <option value="3">3rd Year</option>
+            <option value="4">4th Year</option>
+            <option value="5">5th Year</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="profile-course">Course</label>
+          <select id="profile-course" class="form-input" required>
+            <option value="MBBS">MBBS</option>
+            <option value="BDS">BDS</option>
+            <option value="BAMS">BAMS</option>
+            <option value="BHMS">BHMS</option>
+            <option value="BUMS">BUMS</option>
+            <option value="BPT">BPT</option>
+            <option value="B.Sc Nursing">B.Sc Nursing</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="profile-email-readonly">Email</label>
+        <input type="email" id="profile-email-readonly" class="form-input" disabled style="opacity:0.6; cursor:not-allowed;">
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="profile-save-btn">
+        Save Changes
+      </button>
+    </form>
+  </div>
+
+  <!-- Starred Messages Section -->
+  <section class="starred-section" id="starred-section">
+    <h2>⭐ Starred Messages</h2>
+    <div class="starred-list" id="starred-list">
+      <!-- Populated by JS -->
+      <div class="starred-empty" id="starred-empty">
+        No starred messages yet. Star important AI responses to save them here.
+      </div>
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    App.Profile.init();
+  });
+</script>
+{% endblock %}

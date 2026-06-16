@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block title %}Subjects — MBBS Study Assistant{% endblock %}
+
+{% block content %}
+<div class="subjects-page" id="subjects-page" style="position:relative; z-index:1;">
+
+  <!-- Page Header -->
+  <div class="page-header">
+    <div>
+      <h1>📚 My Subjects</h1>
+      <p class="text-muted mt-1" style="font-size:0.85rem;">Upload your textbooks and build your study library</p>
+    </div>
+  </div>
+
+  <!-- Subject Grid -->
+  <div class="subjects-grid" id="subjects-grid">
+    <!-- Subject cards populated by JS -->
+
+    <!-- Add Subject Card (always present) -->
+    <div class="card subject-add-card" id="add-subject-card" onclick="App.Subjects.openUploadModal()">
+      <div class="subject-add-icon">＋</div>
+      <span class="subject-add-text">Add New Subject</span>
+    </div>
+  </div>
+</div>
+
+<!-- Upload Modal -->
+<div class="modal-overlay" id="upload-modal-overlay">
+  <div class="modal" id="upload-modal">
+    <div class="modal-header">
+      <h2>📤 Upload Subject</h2>
+      <button class="modal-close" onclick="App.Subjects.closeUploadModal()">✕</button>
+    </div>
+
+    <form id="upload-form" onsubmit="App.Subjects.uploadSubject(event)">
+      <div class="form-group">
+        <label class="form-label" for="upload-subject-name">Subject Name *</label>
+        <input
+          type="text"
+          id="upload-subject-name"
+          class="form-input"
+          placeholder="e.g., Anatomy"
+          required
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="upload-book-title">Book Title <span style="color:var(--text-muted);">(optional)</span></label>
+        <input
+          type="text"
+          id="upload-book-title"
+          class="form-input"
+          placeholder="e.g., Gray's Anatomy"
+        >
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">PDF File *</label>
+        <div class="file-upload-area" id="file-upload-area" onclick="document.getElementById('upload-file-input').click()">
+          <div class="file-upload-icon">📄</div>
+          <div class="file-upload-text">
+            <strong>Click to upload</strong> or drag and drop<br>
+            <span style="font-size:0.75rem;">PDF files only (max 100MB)</span>
+          </div>
+          <div class="file-name-display" id="file-name-display"></div>
+        </div>
+        <input
+          type="file"
+          id="upload-file-input"
+          accept=".pdf"
+          style="display:none;"
+          required
+        >
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-lg" id="upload-submit-btn" style="width:100%;">
+        Upload & Process
+      </button>
+    </form>
+
+    <!-- Processing Steps -->
+    <div class="processing-steps" id="processing-steps">
+      <!-- Steps will be injected dynamically via JS -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    App.Subjects.init();
+
+    // File input change handler
+    const fileInput = document.getElementById('upload-file-input');
+    const fileDisplay = document.getElementById('file-name-display');
+    fileInput.addEventListener('change', () => {
+      if (fileInput.files.length > 0) {
+        fileDisplay.textContent = '📎 ' + fileInput.files[0].name;
+        fileDisplay.classList.add('show');
+      } else {
+        fileDisplay.classList.remove('show');
+      }
+    });
+
+    // Drag and drop
+    const dropArea = document.getElementById('file-upload-area');
+    ['dragenter', 'dragover'].forEach(evt => {
+      dropArea.addEventListener(evt, (e) => {
+        e.preventDefault();
+        dropArea.classList.add('drag-over');
+      });
+    });
+    ['dragleave', 'drop'].forEach(evt => {
+      dropArea.addEventListener(evt, (e) => {
+        e.preventDefault();
+        dropArea.classList.remove('drag-over');
+      });
+    });
+    dropArea.addEventListener('drop', (e) => {
+      const files = e.dataTransfer.files;
+      if (files.length > 0 && files[0].type === 'application/pdf') {
+        fileInput.files = files;
+        fileDisplay.textContent = '📎 ' + files[0].name;
+        fileDisplay.classList.add('show');
+      }
+    });
+  });
+</script>
+{% endblock %}

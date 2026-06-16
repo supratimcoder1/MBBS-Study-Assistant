@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login — MBBS Study Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">⚕️</div>
+        <h1 class="auth-title">MBBS Study Assistant</h1>
+        <p class="auth-subtitle">Your AI-powered medical study companion</p>
+      </div>
+
+      <div class="auth-error" id="login-error"></div>
+      <div class="auth-success" id="login-success"></div>
+
+      <form class="auth-form" id="login-form" autocomplete="on">
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email</label>
+          <input
+            type="email"
+            id="login-email"
+            class="form-input"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="login-password">Password</label>
+          <input
+            type="password"
+            id="login-password"
+            class="form-input"
+            placeholder="Enter your password"
+            required
+            autocomplete="current-password"
+          >
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-btn" id="login-submit-btn">
+          Sign In
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Don't have an account? <a href="/signup">Sign up</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Show success message if redirected from signup
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('registered') === 'true') {
+        const el = document.getElementById('login-success');
+        el.textContent = 'Account created successfully! Please sign in.';
+        el.style.display = 'block';
+      }
+
+      // If already logged in, redirect
+      if (App.Auth.getToken()) {
+        window.location.href = '/dashboard';
+        return;
+      }
+
+      const form = document.getElementById('login-form');
+      const errorEl = document.getElementById('login-error');
+      const submitBtn = document.getElementById('login-submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorEl.style.display = 'none';
+
+        const email = document.getElementById('login-email').value.trim();
+        const password = document.getElementById('login-password').value;
+
+        if (!email || !password) {
+          errorEl.textContent = 'Please fill in all fields.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Signing in...';
+
+        try {
+          const res = await fetch('/api/auth/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ email, password }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.detail || data.message || 'Invalid credentials');
+          }
+
+          // Store token in cookie
+          if (data.access_token) {
+            App.Auth.setToken(data.access_token);
+          }
+
+          window.location.href = '/dashboard';
+        } catch (err) {
+          errorEl.textContent = err.message;
+          errorEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Sign In';
+        }
+      });
+    });
+  </script>
+</body>
+</html>

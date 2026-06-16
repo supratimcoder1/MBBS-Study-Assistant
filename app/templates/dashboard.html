@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — MBBS Study Assistant{% endblock %}
+
+{% block content %}
+<div class="dashboard-page" id="dashboard-page">
+
+  <!-- Greeting Section -->
+  <section class="greeting-section" id="greeting-section">
+    <h1 class="greeting-text" id="greeting-text">Good evening!</h1>
+    <div class="greeting-meta">
+      <span class="greeting-meta-item" id="greeting-year">📅 Loading...</span>
+      <span class="greeting-meta-item" id="greeting-course">🎓 Loading...</span>
+    </div>
+  </section>
+
+  <!-- No Subjects Banner (hidden by default) -->
+  <div class="no-subjects-banner hidden" id="no-subjects-banner">
+    📢 You haven't added any subjects yet. <a href="/subjects">Add a subject</a> to start chatting with your study materials!
+  </div>
+
+  <!-- Chat Container -->
+  <div class="chat-container" id="chat-container">
+
+    <!-- Chat Inner Sidebar -->
+    <div class="chat-sidebar" id="chat-sidebar">
+      <div class="chat-sidebar-header">
+        <button class="btn btn-primary" id="new-chat-btn" onclick="App.Chat.createNewChat()">
+          ＋ New Chat
+        </button>
+      </div>
+      <div class="chat-sessions-list" id="chat-sessions-list">
+        <!-- Sessions populated by JS -->
+        <div class="chat-empty-state" id="sessions-empty" style="padding:1.5rem 0.5rem;">
+          <p style="font-size:0.8rem;">No conversations yet.<br>Start a new chat!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Main Area -->
+    <div class="chat-main" id="chat-main">
+
+      <!-- Context Selector Bar -->
+      <div class="chat-context-bar" id="chat-context-bar">
+        <div class="context-selector-wrapper">
+          <button class="btn btn-ghost" id="context-selector-btn" onclick="App.Chat.toggleContextSelector()">
+            📎 Add Context
+          </button>
+          <div class="context-dropdown" id="context-dropdown">
+            <!-- Subject checkboxes populated by JS -->
+            <div class="text-muted" style="padding:0.5rem; font-size:0.8rem;" id="context-no-subjects">No subjects available</div>
+          </div>
+        </div>
+        <div class="focus-area-selector-wrapper" id="focus-area-wrapper" style="display:none;">
+          <label class="focus-area-label" for="focus-area-select">🎯 Focus:</label>
+          <select class="focus-area-select" id="focus-area-select" onchange="App.Chat.onFocusAreaChange(this)">
+            <option value="">All Sections</option>
+          </select>
+        </div>
+        <div class="context-pills" id="context-pills">
+          <!-- Selected subject pills populated by JS -->
+        </div>
+      </div>
+
+      <!-- Messages Area -->
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-empty-state" id="chat-empty-state">
+          <div class="chat-empty-icon">💬</div>
+          <h3>Start a Conversation</h3>
+          <p>Select a chat session from the left or create a new one. Add subjects as context to ask questions about your study materials.</p>
+        </div>
+      </div>
+
+      <!-- Input Area -->
+      <div class="chat-input-area" id="chat-input-area">
+        <div class="chat-input-wrapper">
+          <textarea
+            id="chat-input"
+            placeholder="Type your question..."
+            rows="1"
+            onkeydown="App.Chat.handleInputKeydown(event)"
+          ></textarea>
+          <button id="send-message-btn" onclick="App.Chat.sendMessage()" disabled>
+            ➤
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    App.Dashboard.init();
+  });
+</script>
+{% endblock %}

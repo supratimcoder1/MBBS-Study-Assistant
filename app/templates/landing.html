@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MSA — Turn Medical Textbooks Into Instant Answers</title>
+  <meta name="description" content="Upload your MBBS textbooks, focus on specific subjects, and get answers grounded in your own curriculum. Built for serious medical students.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css?v=3.0">
+</head>
+<body>
+
+  <!-- ===== Navbar ===== -->
+  <nav class="landing-navbar">
+    <a href="/" class="landing-logo">
+      <img src="/static/logo.png" alt="MSA Logo" class="logo-img">
+      MSA
+    </a>
+    <div class="landing-nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+    </div>
+    <div class="landing-nav-links">
+      <a href="/login" style="font-weight: 600;">Log in</a>
+      <a href="/signup" class="btn-pill btn-pill-primary">Start Studying</a>
+    </div>
+  </nav>
+
+  <!-- ===== Hero Section ===== -->
+  <section class="landing-hero">
+    <div class="hero-text">
+      <h1>Turn Medical Textbooks<br>Into Instant Answers.</h1>
+      <p class="subtitle">Upload your MBBS textbooks, focus on specific subjects, and get answers grounded in your own curriculum — not generic internet knowledge.</p>
+
+      <!-- Visual Workflow Connector -->
+      <div class="workflow-connector">
+        <div class="workflow-node">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Textbook
+        </div>
+        <div class="workflow-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="workflow-node">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+          Subject
+        </div>
+        <div class="workflow-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="workflow-node">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="m17 21-5-4-5 4V3.889a.92.92 0 0 1 .244-.629.808.808 0 0 1 .59-.26h8.333a.81.81 0 0 1 .589.26.92.92 0 0 1 .244.63V21Z"/>
+          </svg>
+          Chapter / Section
+        </div>
+        <div class="workflow-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="workflow-node">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          Question
+        </div>
+        <div class="workflow-arrow">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+        </div>
+        <div class="workflow-node">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          Grounded Answer
+        </div>
+      </div>
+
+      <div class="hero-cta">
+        <a href="/signup" class="btn-pill btn-pill-primary">Start Studying Free</a>
+        <a href="#how-it-works" class="btn-pill btn-pill-outline">See How It Works</a>
+      </div>
+    </div>
+
+    <!-- Realistic Chat Mockup -->
+    <div class="hero-mockup">
+      <div class="mockup-window">
+        <div class="mockup-titlebar">
+          <div class="mockup-dots"><span></span><span></span><span></span></div>
+          <span class="mockup-title">MSA Chat</span>
+        </div>
+        <div class="mockup-toolbar">
+          <div class="toolbar-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+            <span>Add Context</span>
+          </div>
+          <div class="toolbar-item">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span>Focus:</span>
+            <span class="toolbar-select">Section 11: Nervous System</span>
+          </div>
+          <div class="mockup-tags">
+            <span class="mockup-tag subject">Physiology <span class="tag-close">&times;</span></span>
+            <span class="mockup-tag chapter">Section 11: Nervous System <span class="tag-close">&times;</span></span>
+          </div>
+        </div>
+        <div class="mockup-chat">
+          <div class="mockup-msg user">
+            <div class="msg-content">explain pain inhibiting mechanism in easy language with flowchart</div>
+          </div>
+          <div class="mockup-msg assistant">
+            <div class="msg-content">
+              <p>To understand the body's pain-inhibiting mechanisms, it is helpful to divide them into two main categories: <strong>Local (Gate-Control)</strong> and <strong>Descending (Endogenous)</strong> pathways.</p>
+              <p class="msg-heading">1. Local Mechanism: Gate-Control Theory</p>
+              <p>This mechanism explains how stimulating large-diameter nerve fibers (e.g., via TENS or rubbing a painful area) can reduce pain.</p>
+              <div class="msg-list-item"><strong>Large fibers (L-fibers):</strong> Carry non-painful touch/pressure sensations.</div>
+              <div class="msg-list-item"><strong>Small fibers (S-fibers):</strong> Carry pain signals.</div>
+              <div class="msg-list-item"><strong>The "Gate":</strong> Located in the dorsal horn of the spinal cord (Substantia Gelatinosa/SG neuron).</div>
+            </div>
+          </div>
+        </div>
+        <div class="mockup-input">
+          <div class="input-field">Type your question...</div>
+          <div class="input-send">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Bento Feature Grid ===== -->
+  <section id="features" class="bento-section">
+    <div class="section-label reveal">Capabilities</div>
+    <h2 class="reveal">Precision Tools for Medical Study</h2>
+    <p class="section-desc reveal">Every feature is designed for the intense volume and specificity required in MBBS preparation.</p>
+
+    <div class="bento-grid">
+      <!-- Card 1: Grounded Answers (Featured, span 2x2) -->
+      <div class="bento-card featured reveal" style="grid-column: span 2; grid-row: span 2;">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+        </div>
+        <h3>Grounded Answers</h3>
+        <p>Every response is sourced directly from your uploaded textbooks with page-level citations. No hallucinated facts, no generic internet scraping — just your curriculum, verified.</p>
+        <div class="card-visual">
+          <div class="visual-citation">
+            <div class="citation-bar"></div>
+            <div class="citation-text">
+              <span class="citation-source">Source: Guyton & Hall, Ch 32, p. 487</span>
+              <span class="citation-body">"The gate-control mechanism operates at the level of the substantia gelatinosa..."</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: Study by Systems (span 2) -->
+      <div class="bento-card reveal reveal-delay-1" style="grid-column: span 2;">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+        </div>
+        <h3>Study by Systems</h3>
+        <p>Filter questions to Hematology, Cardiovascular, Respiratory, Nervous System, and more. Study the way your syllabus is structured.</p>
+        <div class="card-visual">
+          <div class="system-tags">
+            <span class="sys-tag">Cardiovascular</span>
+            <span class="sys-tag active">Nervous System</span>
+            <span class="sys-tag">Respiratory</span>
+            <span class="sys-tag">Hematology</span>
+            <span class="sys-tag">Renal</span>
+            <span class="sys-tag">GIT</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Multi-Subject Context -->
+      <div class="bento-card reveal reveal-delay-2">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2" ry="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+        </div>
+        <h3>Multi-Subject Context</h3>
+        <p>Cross-reference Physiology, Pathology, Pharmacology, and Anatomy in a single query.</p>
+      </div>
+
+      <!-- Card 4: OCR + TOC Extraction -->
+      <div class="bento-card reveal reveal-delay-3">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+        </div>
+        <h3>OCR + TOC Extraction</h3>
+        <p>Scanned PDFs are auto-processed with AI-powered OCR. Table of contents is extracted intelligently.</p>
+      </div>
+
+      <!-- Card 5: Chapter Focus -->
+      <div class="bento-card reveal reveal-delay-1">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+        </div>
+        <h3>Chapter Focus</h3>
+        <p>Narrow your study to a single chapter. Ask questions only from the topic you're currently revising.</p>
+      </div>
+
+      <!-- Card 6: Fast Revision -->
+      <div class="bento-card reveal reveal-delay-2">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        </div>
+        <h3>Fast Revision</h3>
+        <p>Find concepts in seconds instead of flipping through hundreds of pages. Built for exam-day speed.</p>
+      </div>
+
+      <!-- Card 7: PYQ -->
+      <div class="bento-card reveal reveal-delay-3">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+        </div>
+        <h3>PYQ</h3>
+        <p>Get answers to previous year questions mapped directly to your textbook content.</p>
+      </div>
+
+      <!-- Card 8: Quizzes -->
+      <div class="bento-card reveal reveal-delay-4">
+        <div class="card-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <h3>Quizzes</h3>
+        <p>Test yourself with auto-generated MCQs from your textbooks. Reinforce retention before exams.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== How It Works ===== -->
+  <section id="how-it-works" class="flow-section">
+    <div class="section-label reveal">Workflow</div>
+    <h2 class="reveal">From Textbook to Knowledge in Five Steps</h2>
+    <p class="section-desc reveal" style="margin: 0 auto 4rem;">A seamless pipeline that transforms raw textbook PDFs into a focused, queryable study engine.</p>
+    <div class="flow-viewport">
+      <div class="flow-canvas-track">
+        <div class="flow-step-item">
+          <div class="flow-step-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+          </div>
+          <span class="flow-step-label">Upload Textbook</span>
+        </div>
+        <div class="flow-connector"><div class="connector-line"></div></div>
+        <div class="flow-step-item">
+          <div class="flow-step-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M5 17v-5h1.5a1.5 1.5 0 1 1 0 3H5m12 2v-5h2m-2 3h2M5 10V7.914a1 1 0 0 1 .293-.707l3.914-3.914A1 1 0 0 1 9.914 3H18a1 1 0 0 1 1 1v6M5 19v1a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-1M10 3v4a1 1 0 0 1-1 1H5m6 4v5h1.375A1.627 1.627 0 0 0 14 15.375v-1.75A1.627 1.627 0 0 0 12.375 12H11Z"/>
+            </svg>
+          </div>
+          <span class="flow-step-label">AI Processing</span>
+        </div>
+        <div class="flow-connector"><div class="connector-line"></div></div>
+        <div class="flow-step-item">
+          <div class="flow-step-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m17 21-5-4-5 4V3.889a.92.92 0 0 1 .244-.629.808.808 0 0 1 .59-.26h8.333a.81.81 0 0 1 .589.26.92.92 0 0 1 .244.63V21Z"/>
+            </svg>
+          </div>
+          <span class="flow-step-label">Select Chapter/Section</span>
+        </div>
+        <div class="flow-connector"><div class="connector-line"></div></div>
+        <div class="flow-step-item">
+          <div class="flow-step-icon">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <span class="flow-step-label">Ask Questions</span>
+        </div>
+        <div class="flow-connector"><div class="connector-line"></div></div>
+        <div class="flow-step-item">
+          <div class="flow-step-icon" style="background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3);">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <span class="flow-step-label" style="color: #10b981;">Grounded Answers</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== Final CTA ===== -->
+  <section class="cta-section reveal">
+    <h2>Start studying from your own textbooks today.</h2>
+    <p>Upload your first PDF and get grounded answers in minutes.</p>
+    <a href="/signup" class="btn-pill btn-pill-primary">Create Free Account</a>
+  </section>
+
+  <!-- ===== Footer ===== -->
+  <footer class="landing-footer">
+    <div style="margin-bottom: 1rem; display: flex; align-items: center; justify-content: center; gap: 0.5rem;">
+      <img src="/static/logo.png" alt="MSA Logo" class="logo-img" style="height: 20px;">
+      <span>MSA — Your AI Study Companion</span>
+    </div>
+    <p>&copy; 2026 MBBS Study Assistant. All rights reserved.</p>
+  </footer>
+
+  <!-- ===== Scroll Reveal Script ===== -->
+  <script>
+  (function() {
+    // 1. General Scroll Reveal
+    const revealObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+    // 2. Viewport-to-Canvas Scrolling Flowchart
+    const viewport = document.querySelector('.flow-viewport');
+    const canvasTrack = document.querySelector('.flow-canvas-track');
+    const steps = document.querySelectorAll('.flow-step-item');
+    const connectors = document.querySelectorAll('.flow-connector');
+
+    if (viewport && canvasTrack && steps.length > 0) {
+      let activeIndex = 0;
+      let animTimeout1 = null;
+      let animTimeout2 = null;
+
+      function setStep(index) {
+        activeIndex = index;
+
+        // Toggle active classes on steps
+        steps.forEach((step, idx) => {
+          if (idx === index) {
+            step.classList.add('active');
+          } else {
+            step.classList.remove('active');
+          }
+        });
+
+        // Viewport-to-Canvas Centering Translation Math:
+        // X_offset = -(i * W_step) + O_center
+        // Where W_step = Step Width (180px) + Connector Width (100px) = 280px
+        // O_center = (Viewport Width / 2) - (Step Width / 2)
+        const viewportWidth = viewport.getBoundingClientRect().width;
+        const stepWidth = 180;
+        const connectorWidth = 100;
+        const W_step = stepWidth + connectorWidth;
+        const O_center = (viewportWidth / 2) - (stepWidth / 2);
+        const X_offset = -(index * W_step) + O_center;
+
+        canvasTrack.style.transform = `translate3d(${X_offset}px, 0, 0)`;
+      }
+
+      function playFlowSequence() {
+        let currentStep = 0;
+
+        function triggerNextStep() {
+          setStep(currentStep);
+
+          if (currentStep < steps.length - 1) {
+            // Wait 1.5s (active step showcase), then start drawing arrow
+            animTimeout1 = setTimeout(() => {
+              if (connectors[currentStep]) {
+                connectors[currentStep].classList.add('revealed', 'active');
+              }
+              // Wait 0.65s (arrow draw animation), then move to the next step
+              animTimeout2 = setTimeout(() => {
+                currentStep++;
+                triggerNextStep();
+              }, 650);
+            }, 1500);
+          }
+        }
+
+        // Reset all connectors
+        connectors.forEach(c => c.classList.remove('revealed', 'active'));
+        triggerNextStep();
+      }
+
+      // Intersection observer to trigger the sequence once the viewport is visible
+      const flowObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            playFlowSequence();
+            flowObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.15 });
+
+      flowObserver.observe(viewport);
+
+      // Handle window resizing to keep alignment correct
+      window.addEventListener('resize', () => {
+        setStep(activeIndex);
+      });
+    }
+  })();
+  </script>
+
+</body>
+</html>

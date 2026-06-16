@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}MBBS Study Assistant{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css?v=1.0.2">
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+  <!-- Sidebar Overlay (mobile) -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+  <!-- Sidebar Toggle Button -->
+  <button class="sidebar-toggle" id="sidebar-toggle-btn" aria-label="Toggle sidebar">
+    ☰
+  </button>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="main-sidebar">
+    <div class="sidebar-header">
+      <a href="/dashboard" class="sidebar-logo">
+        <div class="sidebar-logo-icon">⚕️</div>
+        <div class="sidebar-logo-text">
+          MBBS Study Assistant
+          <small>Your AI Study Companion</small>
+        </div>
+      </a>
+    </div>
+
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <a href="/dashboard" class="sidebar-nav-item" data-page="dashboard">
+        <span class="sidebar-nav-icon">🏠</span>
+        <span>Dashboard</span>
+      </a>
+      <a href="/subjects" class="sidebar-nav-item" data-page="subjects">
+        <span class="sidebar-nav-icon">📚</span>
+        <span>Subjects</span>
+      </a>
+      <a href="/wip" class="sidebar-nav-item" data-page="pyq">
+        <span class="sidebar-nav-icon">📝</span>
+        <span>PYQ</span>
+      </a>
+      <a href="/wip" class="sidebar-nav-item" data-page="quizzes">
+        <span class="sidebar-nav-icon">🧪</span>
+        <span>Quizzes</span>
+      </a>
+      <a href="/wip" class="sidebar-nav-item" data-page="revisions">
+        <span class="sidebar-nav-icon">📖</span>
+        <span>Chapter Revisions</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">
+      {% if user and user.is_admin %}
+      <a href="/admin" class="sidebar-nav-item" data-page="admin" style="border: 1px dashed rgba(239, 68, 68, 0.4); background: rgba(239, 68, 68, 0.05); margin-bottom: 0.5rem;">
+        <span class="sidebar-nav-icon">💀</span>
+        <span style="color: #ef4444; font-weight: 600;">Hacker Panel</span>
+      </a>
+      {% endif %}
+      <a href="/profile" class="sidebar-nav-item" data-page="profile">
+        <span class="sidebar-nav-icon">⚙️</span>
+        <span>Profile Settings</span>
+      </a>
+      <button class="sidebar-nav-item" id="sidebar-logout-btn">
+        <span class="sidebar-nav-icon">🚪</span>
+        <span>Logout</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content" id="main-content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js?v=1.0.2"></script>
+  {% block scripts %}{% endblock %}
+</body>
+</html>

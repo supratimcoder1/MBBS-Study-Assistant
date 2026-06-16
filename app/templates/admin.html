@@ -1,0 +1,620 @@
+{% extends "base.html" %}
+
+{% block title %}Hacker Panel — Admin Dashboard{% endblock %}
+
+{% block head %}
+<style>
+  /* Hacker Terminal Theme Overrides */
+  .admin-page {
+    position: relative;
+    font-family: 'Courier New', Courier, monospace;
+    color: #33ff33;
+    background: #020202;
+    padding: 1.5rem;
+    border-radius: 8px;
+    border: 1px solid #00ff00;
+    box-shadow: 0 0 15px rgba(0, 255, 0, 0.2);
+    min-height: calc(100vh - 3rem);
+    overflow: hidden;
+  }
+
+  /* Matrix Rain Background */
+  #matrix-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    opacity: 0.15;
+    pointer-events: none;
+  }
+
+  .admin-content {
+    position: relative;
+    z-index: 1;
+  }
+
+  h1.terminal-title {
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    text-shadow: 0 0 8px #00ff00;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid #00ff00;
+    padding-bottom: 0.5rem;
+  }
+
+  h1.terminal-title::after {
+    content: '_';
+    animation: blink 1s infinite;
+  }
+
+  @keyframes blink {
+    0%, 49% { opacity: 1; }
+    50%, 100% { opacity: 0; }
+  }
+
+  /* Grid Metrics */
+  .system-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .metric-card {
+    background: rgba(0, 15, 0, 0.7);
+    border: 1px solid #00aa00;
+    padding: 1rem;
+    border-radius: 4px;
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+  }
+
+  .metric-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(0, 255, 0, 0.4);
+    border-color: #00ff00;
+  }
+
+  .metric-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    color: #88ff88;
+    margin-bottom: 0.25rem;
+  }
+
+  .metric-value {
+    font-size: 2rem;
+    font-weight: bold;
+    text-shadow: 0 0 5px #00ff00;
+  }
+
+  .system-stats {
+    background: rgba(0, 15, 0, 0.7);
+    border: 1px solid #00aa00;
+    padding: 1rem;
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .pulse-indicator {
+    color: #33ff33;
+    font-weight: bold;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .pulse-dot {
+    width: 8px;
+    height: 8px;
+    background-color: #33ff33;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #00ff00;
+    animation: pulse 1.5s infinite;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(0.9); opacity: 0.6; }
+    50% { transform: scale(1.2); opacity: 1; box-shadow: 0 0 12px #00ff00; }
+    100% { transform: scale(0.9); opacity: 0.6; }
+  }
+
+  /* User Table styling */
+  .terminal-table-container {
+    overflow-x: auto;
+    border: 1px solid #00aa00;
+    background: rgba(0, 5, 0, 0.85);
+    border-radius: 4px;
+    margin-bottom: 1.5rem;
+  }
+
+  .terminal-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+    text-align: left;
+  }
+
+  .terminal-table th, .terminal-table td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid #005500;
+  }
+
+  .terminal-table th {
+    background: rgba(0, 40, 0, 0.8);
+    color: #88ff88;
+    text-transform: uppercase;
+    font-size: 0.8rem;
+  }
+
+  .terminal-table tbody tr:hover {
+    background: rgba(0, 30, 0, 0.4);
+  }
+
+  .terminal-badge {
+    padding: 0.15rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.75rem;
+    font-weight: bold;
+    border: 1px solid;
+  }
+
+  .badge-admin {
+    background: rgba(0, 150, 0, 0.2);
+    border-color: #00ff00;
+    color: #00ff00;
+    text-shadow: 0 0 4px #00ff00;
+  }
+
+  .badge-user {
+    background: rgba(100, 100, 100, 0.1);
+    border-color: #88ff88;
+    color: #88ff88;
+  }
+
+  /* Red Action Button for Hacking Vibe */
+  .btn-terminate {
+    background: rgba(255, 0, 50, 0.1);
+    border: 1px solid #ff0033;
+    color: #ff3366;
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+  }
+
+  .btn-terminate:hover:not(:disabled) {
+    background: #ff0033;
+    color: #ffffff;
+    box-shadow: 0 0 10px #ff0033;
+  }
+
+  .btn-terminate:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-color: #555;
+    color: #777;
+  }
+
+  /* Live Terminal Event Log Console */
+  .live-console {
+    background: #000000;
+    border: 1px solid #00aa00;
+    border-radius: 4px;
+    padding: 0.75rem;
+    height: 180px;
+    overflow-y: auto;
+    font-size: 0.8rem;
+    line-height: 1.25;
+    box-shadow: inset 0 0 10px rgba(0, 255, 0, 0.3);
+  }
+
+  .console-line {
+    margin-bottom: 0.25rem;
+    white-space: pre-wrap;
+  }
+
+  .console-time {
+    color: #88ff88;
+    margin-right: 0.5rem;
+  }
+
+  .console-tag-sys { color: #00ffff; }
+  .console-tag-auth { color: #ff9900; }
+  .console-tag-db { color: #cc66ff; }
+  .console-tag-err { color: #ff0033; font-weight: bold; }
+  .console-tag-ok { color: #00ff00; }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-page" id="admin-page">
+  <!-- Matrix Rain Screen -->
+  <canvas id="matrix-canvas"></canvas>
+
+  <div class="admin-content">
+    <!-- Header -->
+    <h1 class="terminal-title">
+      ☣️ HACKER PANEL v2.8 // System Administration
+    </h1>
+
+    <!-- System Info Summary -->
+    <section class="system-stats">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+        <div>
+          <div class="stat-row">
+            <span>CORE STATUS:</span>
+            <span class="pulse-indicator"><span class="pulse-dot"></span><span id="sys-pulse">ONLINE</span></span>
+          </div>
+          <div class="stat-row">
+            <span>ADMIN ID:</span>
+            <span style="color:#ffffff;">{{ user.email }}</span>
+          </div>
+        </div>
+        <div>
+          <div class="stat-row">
+            <span>FTS SEARCH ENGINE:</span>
+            <span style="color:#00ff00;">INDEXED</span>
+          </div>
+          <div class="stat-row">
+            <span>DOCUMENT EXTRACTION:</span>
+            <span id="active-uploads-stat" style="color:#ffffff;">0 active threads</span>
+          </div>
+        </div>
+        <div>
+          <div class="stat-row">
+            <span>EXTRACTION SUCCESS:</span>
+            <span id="success-rate-stat" style="color:#00ff00;">100%</span>
+          </div>
+          <div class="stat-row">
+            <span>DB SCHEMAS:</span>
+            <span style="color:#00ff00;">CASCADE ENABLED</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Metrics Cards Grid -->
+    <div class="system-grid">
+      <div class="metric-card">
+        <div class="metric-label">Registered Shells (Users)</div>
+        <div class="metric-value" id="val-users">--</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Textbooks Cataloged</div>
+        <div class="metric-value" id="val-subjects">--</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Active Chat Sessions</div>
+        <div class="metric-value" id="val-chats">--</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Generated Responses</div>
+        <div class="metric-value" id="val-messages">--</div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Starred Knowledge</div>
+        <div class="metric-value" id="val-stars">--</div>
+      </div>
+    </div>
+
+    <!-- Interactive User Accounts Table -->
+    <h2 style="font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase; display: flex; align-items: center; gap: 0.5rem;">
+      📂 User Directory Nodes
+    </h2>
+    <div class="terminal-table-container">
+      <table class="terminal-table" id="users-table">
+        <thead>
+          <tr>
+            <th>User UUID</th>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Year & Course</th>
+            <th>Registered At</th>
+            <th>Subjects / Chats / Stars</th>
+            <th>Role</th>
+            <th>Operations</th>
+          </tr>
+        </thead>
+        <tbody id="users-tbody">
+          <tr>
+            <td colspan="8" style="text-align: center; color: #88ff88;">[QUERYING DATABASE USER DIRECTORY...]</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Live System Terminal Feed -->
+    <h2 style="font-size: 1.1rem; margin-bottom: 0.5rem; text-transform: uppercase;">
+      ⌨️ Live Event Console Log
+    </h2>
+    <div class="live-console" id="console-feed">
+      <!-- Programmatically loaded -->
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  // Matrix Rain Effect
+  (function initMatrix() {
+    const canvas = document.getElementById('matrix-canvas');
+    const ctx = canvas.getContext('2d');
+
+    // Fit canvas size to parent container
+    function resizeCanvas() {
+      const parent = canvas.parentElement;
+      canvas.width = parent.clientWidth;
+      canvas.height = parent.clientHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const katakana = 'ｱｲｳｴｵｶｷｸｹｺｻｼｽｾｿﾀﾁﾂﾃﾄﾅﾆﾇﾈﾉﾊﾋﾌﾍﾎﾏﾐﾑﾒﾓﾔﾕﾖﾗﾘﾙﾚﾛﾜﾝ1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ⚕️☣️☠️';
+    const alphabet = katakana.split('');
+
+    const fontSize = 14;
+    const columns = canvas.width / fontSize;
+
+    const rainDrops = [];
+    for (let x = 0; x < columns; x++) {
+      rainDrops[x] = 1;
+    }
+
+    function draw() {
+      // Draw semi-transparent black layer to create fade trailing
+      ctx.fillStyle = 'rgba(2, 2, 2, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      ctx.fillStyle = '#0F0'; // Green text
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < rainDrops.length; i++) {
+        const text = alphabet[Math.floor(Math.random() * alphabet.length)];
+        ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
+
+        if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          rainDrops[i] = 0;
+        }
+        rainDrops[i]++;
+      }
+    }
+
+    setInterval(draw, 33);
+  })();
+
+  // Admin Panel logic
+  const Admin = {
+    // Current admin sub (uuid) to prevent self termination
+    currentAdminSub: null,
+
+    log(tag, message, isError = false) {
+      const consoleFeed = document.getElementById('console-feed');
+      const line = document.createElement('div');
+      line.className = 'console-line';
+      
+      const timeSpan = document.createElement('span');
+      timeSpan.className = 'console-time';
+      const now = new Date();
+      timeSpan.textContent = `[${now.toTimeString().split(' ')[0]}.${String(now.getMilliseconds()).padStart(3, '0')}]`;
+      
+      const tagSpan = document.createElement('span');
+      if (isError) {
+        tagSpan.className = 'console-tag-err';
+        tagSpan.textContent = `[ERR_${tag.toUpperCase()}]`;
+      } else {
+        const classMap = {
+          sys: 'console-tag-sys',
+          auth: 'console-tag-auth',
+          db: 'console-tag-db',
+          ok: 'console-tag-ok'
+        };
+        tagSpan.className = classMap[tag] || '';
+        tagSpan.textContent = `[${tag.toUpperCase()}]`;
+      }
+
+      line.appendChild(timeSpan);
+      line.appendChild(tagSpan);
+      line.appendChild(document.createTextNode(' ' + message));
+      consoleFeed.appendChild(line);
+      consoleFeed.scrollTop = consoleFeed.scrollHeight;
+    },
+
+    async fetchStats() {
+      try {
+        const res = await fetch('/api/admin/stats');
+        if (!res.ok) throw new Error(`HTTP_${res.status}`);
+        const data = await res.json();
+        
+        document.getElementById('val-users').textContent = data.metrics.total_users;
+        document.getElementById('val-subjects').textContent = data.metrics.total_subjects;
+        document.getElementById('val-chats').textContent = data.metrics.total_chats;
+        document.getElementById('val-messages').textContent = data.metrics.total_messages;
+        document.getElementById('val-stars').textContent = data.metrics.total_stars;
+
+        document.getElementById('active-uploads-stat').textContent = `${data.system.active_uploads} active threads`;
+        document.getElementById('success-rate-stat').textContent = data.system.success_rate;
+        
+        this.log('sys', `Metrics query success: ${data.metrics.total_users} users, ${data.metrics.total_subjects} textbooks loaded.`);
+      } catch (err) {
+        this.log('sys', `Failed to aggregate metrics: ${err.message}`, true);
+      }
+    },
+
+    async fetchUsers() {
+      const tbody = document.getElementById('users-tbody');
+      try {
+        const res = await fetch('/api/admin/users');
+        if (!res.ok) throw new Error(`HTTP_${res.status}`);
+        const users = await res.json();
+        
+        tbody.innerHTML = '';
+        if (users.length === 0) {
+          tbody.innerHTML = `<tr><td colspan="8" style="text-align: center;">[NO SHELLS DETECTED ON PLATFORM]</td></tr>`;
+          return;
+        }
+
+        users.forEach(u => {
+          const tr = document.createElement('tr');
+          
+          const isSelf = u.id === this.currentAdminSub;
+          
+          // Truncate UUID
+          const shortId = u.id.substring(0, 8) + '...';
+          const badgeClass = u.is_admin ? 'badge-admin' : 'badge-user';
+          const badgeText = u.is_admin ? 'ADMIN' : 'USER';
+          
+          tr.innerHTML = `
+            <td title="${u.id}" style="color: #00ffff;">${shortId}</td>
+            <td style="color: #ffffff;">${u.email}</td>
+            <td>${escapeHTML(u.name)}</td>
+            <td>Year ${escapeHTML(u.year)} / ${escapeHTML(u.course)}</td>
+            <td>${new Date(u.created_at).toLocaleDateString()}</td>
+            <td style="text-align:center;">
+              <span style="color:#00ff00;">${u.stats.subjects}</span> / 
+              <span style="color:#00ffff;">${u.stats.chats}</span> / 
+              <span style="color:#ffaa00;">${u.stats.stars}</span>
+            </td>
+            <td><span class="terminal-badge ${badgeClass}">${badgeText}</span></td>
+            <td>
+              <button class="btn-terminate" 
+                      onclick="Admin.terminateAccount('${u.id}', '${u.email}')" 
+                      ${isSelf ? 'disabled' : ''}>
+                ${isSelf ? 'ACTIVE SESSION' : 'TERMINATE'}
+              </button>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+
+        this.log('db', `Loaded ${users.length} database node records.`);
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #ff0033;">[DB ERROR: FAILED TO LOAD NODES]</td></tr>`;
+        this.log('db', `Failed loading user nodes: ${err.message}`, true);
+      }
+    },
+
+    async terminateAccount(userId, email) {
+      if (!confirm(`⚠️ DANGER: YOU ARE ABOUT TO ENFORCE CASCADING TERMINATION ON USER ACCOUNT:\n\nEmail: ${email}\nUUID: ${userId}\n\nAll textbooks, search vectors, hierarchy indexes, conversations, and account records will be permanently erased.\n\nType OK to continue.`)) {
+        this.log('sys', `Enforcement cancelled for node: ${email}`);
+        return;
+      }
+
+      this.log('auth', `Requesting GoTrue session revocation and profile purging for UUID ${userId}...`);
+      
+      try {
+        const res = await fetch(`/api/admin/users/${userId}`, {
+          method: 'DELETE'
+        });
+        
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.detail || `HTTP_${res.status}`);
+        }
+        
+        this.log('ok', `purged authentication container: ${email}`);
+        this.log('db', `purged relational tables and text vectors: cascade verified.`);
+        
+        // Refresh dashboard
+        this.fetchStats();
+        this.fetchUsers();
+        
+        showToast('Account terminated successfully', 'error');
+      } catch (err) {
+        this.log('sys', `Enforcement protocol failed for ${email}: ${err.message}`, true);
+        showToast(`Termination failed: ${err.message}`, 'error');
+      }
+    },
+
+    async init() {
+      this.log('sys', 'Hacker shell interface connected.');
+      this.log('auth', 'Checking administrative authentication token...');
+
+      // Parse payload from cookies to check current admin ID
+      const user = parseUserCookie();
+      if (user) {
+        this.currentAdminSub = user.sub;
+        this.log('ok', `Logged in as root admin: ${user.email} (${user.sub.substring(0, 8)}...)`);
+      } else {
+        this.log('auth', 'Warning: session payload cookie unverified.', true);
+      }
+
+      // Initial fetches
+      await this.fetchStats();
+      await this.fetchUsers();
+      
+      // Auto-scroll log console
+      this.log('sys', 'Relational database listeners active.');
+    }
+  };
+
+  // Helper function to escape HTML
+  function escapeHTML(str) {
+    if (!str) return '';
+    return str.replace(/[&<>'"]/g, 
+      tag => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        "'": '&#39;',
+        '"': '&quot;'
+      }[tag] || tag)
+    );
+  }
+
+  // Parse JWT token from browser cookies
+  function parseUserCookie() {
+    try {
+      const match = document.cookie.match(new RegExp('(^| )access_token=([^;]+)'));
+      if (!match) return null;
+      const token = match[2];
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      return payload;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Toast notification helper (if not imported)
+  function showToast(message, type = 'success') {
+    const container = document.getElementById('toast-container');
+    if (!container) return;
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.style.background = type === 'error' ? '#aa0000' : '#005500';
+    toast.style.border = type === 'error' ? '1px solid #ff0000' : '1px solid #00ff00';
+    toast.style.color = '#ffffff';
+    toast.style.padding = '0.75rem 1rem';
+    toast.style.margin = '0.5rem';
+    toast.style.borderRadius = '4px';
+    toast.style.fontSize = '0.85rem';
+    toast.style.boxShadow = '0 0 10px rgba(0,255,0,0.2)';
+    toast.textContent = message;
+    container.appendChild(toast);
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      setTimeout(() => toast.remove(), 300);
+    }, 4000);
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    Admin.init();
+  });
+</script>
+{% endblock %}

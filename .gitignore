@@ -1,0 +1,12 @@
+.venv/
+__pycache__/
+*.pyc
+.env
+*.pdf
+uploads/
+.vercel/
+admin_credentials.txt
+scratch/
+*.log
+*_ocr_cache.json
+*_ocr_data.txt

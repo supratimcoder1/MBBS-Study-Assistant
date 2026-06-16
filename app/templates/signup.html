@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign Up — MBBS Study Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+  <div class="auth-page">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">⚕️</div>
+        <h1 class="auth-title">Create Account</h1>
+        <p class="auth-subtitle">Join MBBS Study Assistant and ace your exams</p>
+      </div>
+
+      <div class="auth-error" id="signup-error"></div>
+
+      <form class="auth-form" id="signup-form" autocomplete="on">
+        <div class="form-group">
+          <label class="form-label" for="signup-name">Full Name</label>
+          <input
+            type="text"
+            id="signup-name"
+            class="form-input"
+            placeholder="Dr. John Doe"
+            required
+            autocomplete="name"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-email">Email</label>
+          <input
+            type="email"
+            id="signup-email"
+            class="form-input"
+            placeholder="you@example.com"
+            required
+            autocomplete="email"
+          >
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="signup-password">Password</label>
+          <input
+            type="password"
+            id="signup-password"
+            class="form-input"
+            placeholder="Min. 8 characters"
+            required
+            minlength="8"
+            autocomplete="new-password"
+          >
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label" for="signup-year">Year</label>
+            <select id="signup-year" class="form-input" required>
+              <option value="" disabled selected>Select Year</option>
+              <option value="1">1st Year</option>
+              <option value="2">2nd Year</option>
+              <option value="3">3rd Year</option>
+              <option value="4">4th Year</option>
+              <option value="5">5th Year</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="signup-course">Course</label>
+            <select id="signup-course" class="form-input" required>
+              <option value="" disabled selected>Select Course</option>
+              <option value="MBBS">MBBS</option>
+              <option value="BDS">BDS</option>
+              <option value="BAMS">BAMS</option>
+              <option value="BHMS">BHMS</option>
+              <option value="BUMS">BUMS</option>
+              <option value="BPT">BPT</option>
+              <option value="B.Sc Nursing">B.Sc Nursing</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary auth-btn" id="signup-submit-btn">
+          Create Account
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        Already have an account? <a href="/login">Sign in</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <script src="/static/js/app.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // If already logged in, redirect
+      if (App.Auth.getToken()) {
+        window.location.href = '/dashboard';
+        return;
+      }
+
+      const form = document.getElementById('signup-form');
+      const errorEl = document.getElementById('signup-error');
+      const submitBtn = document.getElementById('signup-submit-btn');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorEl.style.display = 'none';
+
+        const name = document.getElementById('signup-name').value.trim();
+        const email = document.getElementById('signup-email').value.trim();
+        const password = document.getElementById('signup-password').value;
+        const year = document.getElementById('signup-year').value;
+        const course = document.getElementById('signup-course').value;
+
+        if (!name || !email || !password || !year || !course) {
+          errorEl.textContent = 'Please fill in all fields.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        if (password.length < 8) {
+          errorEl.textContent = 'Password must be at least 8 characters.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Creating account...';
+
+        try {
+          const res = await fetch('/api/auth/signup', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name, email, password, year: parseInt(year), course }),
+          });
+
+          const data = await res.json();
+
+          if (!res.ok) {
+            throw new Error(data.detail || data.message || 'Registration failed');
+          }
+
+          // Redirect to login with success message
+          window.location.href = '/login?registered=true';
+        } catch (err) {
+          errorEl.textContent = err.message;
+          errorEl.style.display = 'block';
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Create Account';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
