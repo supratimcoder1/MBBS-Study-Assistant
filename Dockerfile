@@ -1,10 +1,7 @@
 FROM python:3.11-slim
 
-# Install system dependencies for OCRmyPDF and PostgreSQL
+# Install system dependencies for PostgreSQL
 RUN apt-get update && apt-get install -y \
-    ghostscript \
-    tesseract-ocr \
-    ocrmypdf \
     gcc \
     libpq-dev \
     && rm -rf /var/lib/apt/lists/*

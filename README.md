@@ -133,7 +133,7 @@ To run an offline run of the PDF parser, TOC extractor, hierarchy builder, and t
 
 ### 1. Backend (FastAPI & Background Tasks) on Render
 The application is pre-configured for Docker-based deployment on **Render**:
-*   The system-level requirements (`ghostscript`, `tesseract-ocr`, `ocrmypdf`) are built via the [Dockerfile](Dockerfile).
+*   The deployment uses a simplified [Dockerfile](Dockerfile) which does not require any local OCR packages, since PDF OCR is fully offloaded to the cloud Gemini API.
 *   Use [render.yaml](render.yaml) to deploy the service in one click. Link the environment variables: `SUPABASE_URL`, `SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY`, `DATABASE_URL`, and `GEMINI_API_KEY`.
 
 ### 2. Frontend / Serverless on Vercel
