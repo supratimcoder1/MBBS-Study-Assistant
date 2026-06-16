@@ -7,6 +7,7 @@ from fastapi import APIRouter, HTTPException, Response, Request, Depends
 from pydantic import BaseModel, EmailStr
 from app.core.config import supabase, supabase_admin
 from app.core.auth import get_current_user
+import re
 
 router = APIRouter(prefix="/api/auth", tags=["auth"])
 
@@ -39,6 +40,18 @@ async def signup(body: SignupRequest):
     The DB trigger auto-creates a profile row; we then patch it with
     year/course using the admin client.
     """
+    # Password complexity validation
+    if len(body.password) < 8:
+        raise HTTPException(status_code=400, detail="Password must be at least 8 characters long.")
+    if not re.search(r"[A-Z]", body.password):
+        raise HTTPException(status_code=400, detail="Password must contain at least one uppercase letter.")
+    if not re.search(r"[a-z]", body.password):
+        raise HTTPException(status_code=400, detail="Password must contain at least one lowercase letter.")
+    if not re.search(r"\d", body.password):
+        raise HTTPException(status_code=400, detail="Password must contain at least one number.")
+    if not re.search(r"[!@#$%^&*(),.?\":{}|<>]", body.password):
+        raise HTTPException(status_code=400, detail="Password must contain at least one special character.")
+
     try:
         result = supabase.auth.sign_up({
             "email": body.email,

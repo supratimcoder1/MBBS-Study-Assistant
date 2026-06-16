@@ -39,7 +39,10 @@ This file will track the different agents and subagents used in this project, or
   - Implemented automatic logout upon tab close by syncing authentication state validation checks with browser `sessionStorage` in `app/static/js/app.js`.
   - Fixed the new chat creation double-message rendering race condition by awaiting `switchChat` sequentially inside `createNewChat` in `app/static/js/app.js`.
   - Added query reformulation via `"gemini-2.5-flash"` in `app/services/gemini_service.py` to translate conversational follow-up turns into standalone search terms, isolating FTS preprocessing rate limits from the main chat model.
-
+  - Project Reorganization: Moved standalone scripts, database schemas, and scratch files into `scripts/`, `db/`, and `scratch/`.
+  - Git & GitHub Integration: Initialized local Git repository, created `.gitignore`, established MIT LICENSE, pushed initial codebase and deployment optimizations to `https://github.com/supratimcoder1/MBBS-Study-Assistant.git`.
+  - Cloud Deployment Optimization: Simplified `Dockerfile` (removed Tesseract/Ghostscript), updated `requirements.txt` (added `psycopg2-binary`, removed `ocrmypdf`), and updated `README.md` to reflect cloud-native hosting setup.
+  - Implemented stronger password creation logic for new users (client and server-side complexity validation).
 
 ### Backend Builder (Subagent)
 - **Role**: Backend API Developer

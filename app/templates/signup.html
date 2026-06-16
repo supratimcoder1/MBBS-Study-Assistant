@@ -68,7 +68,7 @@
             type="password"
             id="signup-password"
             class="form-input"
-            placeholder="Min. 8 characters"
+            placeholder="Min 8 chars, 1 uppercase, 1 number, 1 special"
             required
             minlength="8"
             autocomplete="new-password"
@@ -149,6 +149,17 @@
 
         if (password.length < 8) {
           errorEl.textContent = 'Password must be at least 8 characters.';
+          errorEl.style.display = 'block';
+          return;
+        }
+
+        const hasUpperCase = /[A-Z]/.test(password);
+        const hasLowerCase = /[a-z]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasNonalphas = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+
+        if (!hasUpperCase || !hasLowerCase || !hasNumbers || !hasNonalphas) {
+          errorEl.textContent = 'Password must contain at least 1 uppercase letter, 1 lowercase letter, 1 number, and 1 special character.';
           errorEl.style.display = 'block';
           return;
         }
