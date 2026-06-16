@@ -7,14 +7,30 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/css/style.css">
+  <link rel="stylesheet" href="/static/css/style.css?v=4.0">
 </head>
 <body>
+
+  <nav class="landing-navbar">
+    <a href="/" class="landing-logo">
+      <img src="/static/logo.png" alt="MSA Logo" class="logo-img">
+      MSA
+    </a>
+    <div class="landing-nav-links">
+      <a href="/#features">Features</a>
+      <a href="/#how-it-works">How It Works</a>
+      <a href="/#about">About</a>
+      <a href="/#contact">Contact</a>
+    </div>
+    <div class="landing-nav-actions">
+      <a href="/signup" class="btn-pill btn-pill-primary" id="cta-get-started">Get Started <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align: middle;"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></a>
+    </div>
+  </nav>
 
   <div class="auth-page">
     <div class="auth-card">
       <div class="auth-header">
-        <div class="auth-logo">⚕️</div>
+        <img src="/static/logo.png" alt="MSA" class="logo-img" style="height: 40px; margin: 0 auto 0.5rem;">
         <h1 class="auth-title">MBBS Study Assistant</h1>
         <p class="auth-subtitle">Your AI-powered medical study companion</p>
       </div>
