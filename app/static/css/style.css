@@ -386,6 +386,7 @@ body.sidebar-collapsed .sidebar-toggle {
   background: var(--accent-gradient-hover);
   box-shadow: var(--shadow-glow-strong);
   transform: translateY(-1px);
+  color: #fff !important;
 }
 
 .btn-primary:active {
@@ -2090,6 +2091,7 @@ select.form-input {
 .btn-pill-primary:hover {
   transform: translateY(-2px);
   box-shadow: 0 0 24px rgba(59, 130, 246, 0.35), 0 4px 12px rgba(0, 0, 0, 0.3);
+  color: #fff !important;
 }
 
 .btn-pill-outline {
@@ -2101,6 +2103,7 @@ select.form-input {
 .btn-pill-outline:hover {
   background: rgba(255, 255, 255, 0.06);
   border-color: rgba(255, 255, 255, 0.2);
+  color: var(--text-primary) !important;
 }
 
 /* ---- 3. Hero Section ---- */
