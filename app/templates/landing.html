@@ -344,7 +344,9 @@
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           entry.target.classList.add('revealed');
-          revealObserver.unobserve(entry.target);
+        } else if (entry.boundingClientRect.top > 0) {
+          // Reset when the element goes below the viewport, so it can reveal again when scrolling down
+          entry.target.classList.remove('revealed');
         }
       });
     }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
