@@ -109,13 +109,7 @@ The codebase has been reorganized into a modular, clean, and production-ready la
         alembic upgrade head
         ```
 
-6.  **Seed the Admin Account:**
-    Run the admin seeding utility to register the default system administrator:
-    ```bash
-    python scripts/seed_admin.py
-    ```
-
-7.  **Run the Server:**
+6.  **Run the Server:**
     ```bash
     uvicorn app.main:app --reload
     ```
