@@ -39,6 +39,8 @@ async def get_current_user(request: Request) -> dict:
         db = SessionLocal()
         try:
             profile = db.query(Profile).filter(Profile.id == user.id).first()
+            if profile and not profile.is_approved and not profile.is_admin:
+                raise HTTPException(status_code=403, detail="Account pending approval")
             is_admin = profile.is_admin if profile else False
         finally:
             db.close()

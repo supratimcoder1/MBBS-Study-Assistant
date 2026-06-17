@@ -184,6 +184,33 @@
     color: #88ff88;
   }
 
+  .badge-pending {
+    background: rgba(255, 165, 0, 0.2);
+    border-color: #ffaa00;
+    color: #ffaa00;
+    text-shadow: 0 0 4px #ffaa00;
+  }
+
+  .btn-approve {
+    background: rgba(0, 255, 0, 0.1);
+    border: 1px solid #00ff00;
+    color: #33ff33;
+    font-family: inherit;
+    font-size: 0.75rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: 3px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
+    margin-right: 0.25rem;
+  }
+
+  .btn-approve:hover:not(:disabled) {
+    background: #00ff00;
+    color: #020202;
+    box-shadow: 0 0 10px #00ff00;
+  }
+
   /* Red Action Button for Hacking Vibe */
   .btn-terminate {
     background: rgba(255, 0, 50, 0.1);
@@ -477,9 +504,29 @@
           
           // Truncate UUID
           const shortId = u.id.substring(0, 8) + '...';
-          const badgeClass = u.is_admin ? 'badge-admin' : 'badge-user';
-          const badgeText = u.is_admin ? 'ADMIN' : 'USER';
           
+          let badgeClass = 'badge-user';
+          let badgeText = 'USER';
+          if (u.is_admin) {
+            badgeClass = 'badge-admin';
+            badgeText = 'ADMIN';
+          } else if (!u.is_approved) {
+            badgeClass = 'badge-pending';
+            badgeText = 'PENDING';
+          }
+          
+          let operationsHtml = '';
+          if (isSelf) {
+            operationsHtml = `<button class="btn-terminate" disabled>ACTIVE SESSION</button>`;
+          } else if (!u.is_approved && !u.is_admin) {
+            operationsHtml = `
+              <button class="btn-approve" onclick="Admin.approveAccount('${u.id}', '${u.email}')">APPROVE</button>
+              <button class="btn-terminate" onclick="Admin.terminateAccount('${u.id}', '${u.email}')">REJECT</button>
+            `;
+          } else {
+            operationsHtml = `<button class="btn-terminate" onclick="Admin.terminateAccount('${u.id}', '${u.email}')">TERMINATE</button>`;
+          }
+
           tr.innerHTML = `
             <td title="${u.id}" style="color: #00ffff;">${shortId}</td>
             <td style="color: #ffffff;">${u.email}</td>
@@ -493,11 +540,7 @@
             </td>
             <td><span class="terminal-badge ${badgeClass}">${badgeText}</span></td>
             <td>
-              <button class="btn-terminate" 
-                      onclick="Admin.terminateAccount('${u.id}', '${u.email}')" 
-                      ${isSelf ? 'disabled' : ''}>
-                ${isSelf ? 'ACTIVE SESSION' : 'TERMINATE'}
-              </button>
+              ${operationsHtml}
             </td>
           `;
           tbody.appendChild(tr);
@@ -507,6 +550,23 @@
       } catch (err) {
         tbody.innerHTML = `<tr><td colspan="8" style="text-align: center; color: #ff0033;">[DB ERROR: FAILED TO LOAD NODES]</td></tr>`;
         this.log('db', `Failed loading user nodes: ${err.message}`, true);
+      }
+    },
+
+    async approveAccount(userId, email) {
+      this.log('auth', `Requesting approval for UUID ${userId}...`);
+      try {
+        const res = await fetch(`/api/admin/users/${userId}/approve`, { method: 'POST' });
+        if (!res.ok) {
+          const errData = await res.json();
+          throw new Error(errData.detail || `HTTP_${res.status}`);
+        }
+        this.log('ok', `Account approved: ${email}`);
+        this.fetchUsers();
+        showToast('Account approved successfully', 'success');
+      } catch (err) {
+        this.log('sys', `Approval failed for ${email}: ${err.message}`, true);
+        showToast(err.message, 'error');
       }
     },
 

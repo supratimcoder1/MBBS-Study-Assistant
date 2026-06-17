@@ -182,6 +182,35 @@ async def send_message(
     db.add(user_msg)
     db.flush()
 
+    # 1.5 Pre-filter for greetings, swearing, and casual chat
+    from app.services.query_filter import check_study_filter
+    is_filtered, robotic_response = check_study_filter(body.content)
+    if is_filtered:
+        assistant_msg = ChatMessage(
+            id=uuid.uuid4(),
+            chat_session_id=session_uuid,
+            role="assistant",
+            content=robotic_response,
+            metadata_={},
+        )
+        db.add(assistant_msg)
+        db.commit()
+        return {
+            "user_message": {
+                "id": str(user_msg.id),
+                "role": user_msg.role,
+                "content": user_msg.content,
+                "created_at": str(user_msg.created_at),
+            },
+            "assistant_message": {
+                "id": str(assistant_msg.id),
+                "role": assistant_msg.role,
+                "content": assistant_msg.content,
+                "metadata": assistant_msg.metadata_,
+                "created_at": str(assistant_msg.created_at),
+            },
+        }
+
     # 2. Determine subject IDs from request or session context
     subject_ids = body.subject_ids
     if not subject_ids:

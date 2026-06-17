@@ -15,6 +15,7 @@ CREATE TABLE IF NOT EXISTS public.profiles (
     course TEXT,
     email TEXT UNIQUE NOT NULL,
     is_admin BOOLEAN NOT NULL DEFAULT FALSE,
+    is_approved BOOLEAN NOT NULL DEFAULT FALSE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );

@@ -45,6 +45,10 @@ This file will track the different agents and subagents used in this project, or
   - Implemented stronger password creation logic for new users (client and server-side complexity validation).
   - Reverted Vercel-specific workarounds and configurations in favor of deploying to Render.
   - Configured logo.png as the favicon across all templates (base, landing, login, and signup).
+  - Implemented the Hacker Panel account verification and approval/rejection system (including database schema updates, Alembic migrations, and backend/frontend authorization enforcement).
+  - Built an insulated query pre-filtering layer (`app/services/query_filter.py`) to intercept off-topic chats, greetings, and profanity and return a standard robotic reply without RAG/Gemini API calls.
+  - Implemented a 10-tier 24-hour Claude-style advanced dashboard greeting schedule with medical study motivational taglines.
+  - Dynamically hid the "Profile Settings" link in the frontend sidebar for logged-in administrators.
 
 ### Backend Builder (Subagent)
 - **Role**: Backend API Developer

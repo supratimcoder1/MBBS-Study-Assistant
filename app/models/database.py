@@ -56,6 +56,7 @@ class Profile(Base):
     course = Column(String, nullable=True)
     email = Column(String, unique=True, nullable=False)
     is_admin = Column(Boolean, nullable=False, default=False)
+    is_approved = Column(Boolean, nullable=False, default=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now(), nullable=False)
     updated_at = Column(DateTime(timezone=True), server_default=func.now(), onupdate=func.now(), nullable=False)
 

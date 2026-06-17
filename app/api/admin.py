@@ -90,6 +90,7 @@ async def get_admin_users(
                 "year": p.year or "N/A",
                 "course": p.course or "N/A",
                 "is_admin": p.is_admin,
+                "is_approved": p.is_approved,
                 "created_at": str(p.created_at),
                 "stats": {
                     "subjects": subject_count,
@@ -141,3 +142,20 @@ async def delete_user_account(
     except Exception as exc:
         logger.error("Error deleting user %s via admin: %s", user_id, exc)
         raise HTTPException(status_code=500, detail=f"Failed to terminate account: {exc}")
+
+
+# ── POST /users/{user_id}/approve ────────────────────────────────────────────
+@router.post("/users/{user_id}/approve")
+async def approve_user_account(
+    user_id: str,
+    admin_user: dict = Depends(verify_admin),
+    db: Session = Depends(get_db),
+):
+    """Administratively approve a pending user account."""
+    target_profile = db.query(Profile).filter(Profile.id == user_id).first()
+    if not target_profile:
+        raise HTTPException(status_code=404, detail="User account not found")
+    
+    target_profile.is_approved = True
+    db.commit()
+    return {"message": f"Account {target_profile.email} approved successfully"}

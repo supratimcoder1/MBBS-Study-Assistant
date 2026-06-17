@@ -791,6 +791,13 @@ select.form-input {
   background-clip: text;
 }
 
+.greeting-tagline {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-top: 0.25rem;
+  font-weight: 400;
+}
+
 .greeting-meta {
   display: flex;
   gap: 1rem;

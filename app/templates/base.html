@@ -63,10 +63,12 @@
         <span style="color: #ef4444; font-weight: 600;">Hacker Panel</span>
       </a>
       {% endif %}
+      {% if not user.is_admin %}
       <a href="/profile" class="sidebar-nav-item" data-page="profile">
         <span class="sidebar-nav-icon">⚙️</span>
         <span>Profile Settings</span>
       </a>
+      {% endif %}
       <button class="sidebar-nav-item" id="sidebar-logout-btn">
         <span class="sidebar-nav-icon">🚪</span>
         <span>Logout</span>
