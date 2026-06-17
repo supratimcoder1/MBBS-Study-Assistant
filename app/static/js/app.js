@@ -380,7 +380,13 @@ App.Dashboard = {
       const data = await res.json();
       App.Dashboard.profile = data;
 
-      const name = data.name || 'Student';
+      let name = 'Student';
+      if (data.name) {
+        const parts = data.name.trim().split(/\s+/);
+        if (parts.length > 0 && parts[0]) {
+          name = parts[0];
+        }
+      }
       document.getElementById('greeting-text').innerHTML =
         `${greeting}, <span>${App.Utils.escapeHtml(name)}</span>! 👋`;
 
