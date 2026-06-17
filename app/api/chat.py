@@ -182,19 +182,20 @@ async def send_message(
     db.add(user_msg)
     db.flush()
 
-    # 1.5 Pre-filter for greetings, swearing, and casual chat
-    from app.services.query_filter import check_study_filter
-    is_filtered, robotic_response = check_study_filter(body.content)
-    if is_filtered:
+    # 1b. Pre-filter: intercept greetings, profanity, casual chatter
+    from app.services.query_filter import screen_query
+    filtered_response = screen_query(body.content)
+    if filtered_response:
+        # Short-circuit: save the canned response and return immediately
         assistant_msg = ChatMessage(
             id=uuid.uuid4(),
             chat_session_id=session_uuid,
             role="assistant",
-            content=robotic_response,
-            metadata_={},
+            content=filtered_response,
         )
         db.add(assistant_msg)
         db.commit()
+
         return {
             "user_message": {
                 "id": str(user_msg.id),
@@ -206,7 +207,7 @@ async def send_message(
                 "id": str(assistant_msg.id),
                 "role": assistant_msg.role,
                 "content": assistant_msg.content,
-                "metadata": assistant_msg.metadata_,
+                "metadata": None,
                 "created_at": str(assistant_msg.created_at),
             },
         }

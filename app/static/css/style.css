@@ -792,10 +792,12 @@ select.form-input {
 }
 
 .greeting-tagline {
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: var(--text-muted);
   margin-top: 0.25rem;
   font-weight: 400;
+  font-style: italic;
+  opacity: 0.85;
 }
 
 .greeting-meta {

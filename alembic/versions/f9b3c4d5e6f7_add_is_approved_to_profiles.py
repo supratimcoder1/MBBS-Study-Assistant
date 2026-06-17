@@ -1,12 +1,12 @@
-"""Add is_approved to profiles
+"""Add is_approved column to profiles
 
 Revision ID: f9b3c4d5e6f7
 Revises: 3b4a83deaede
-Create Date: 2026-06-17 11:20:00.000000
+Create Date: 2026-06-17 12:47:00.000000
 
 """
-
 from typing import Sequence, Union
+
 from alembic import op
 import sqlalchemy as sa
 
@@ -19,14 +19,14 @@ depends_on: Union[str, Sequence[str], None] = None
 
 
 def upgrade() -> None:
-    # 1. Add the column as nullable first (to allow existing rows)
-    op.add_column('profiles', sa.Column('is_approved', sa.Boolean(), nullable=True, server_default=sa.text('false')))
-    
-    # 2. Update existing profiles to be approved
-    op.execute("UPDATE profiles SET is_approved = true")
-    
-    # 3. Alter the column to NOT NULL
-    op.alter_column('profiles', 'is_approved', existing_type=sa.Boolean(), nullable=False)
+    # Add the column as nullable first
+    op.add_column('profiles', sa.Column('is_approved', sa.Boolean(), nullable=True))
+
+    # Set all existing users to approved so they are not locked out
+    op.execute("UPDATE profiles SET is_approved = TRUE")
+
+    # Now make it NOT NULL with a default of FALSE for future signups
+    op.alter_column('profiles', 'is_approved', nullable=False, server_default=sa.text('FALSE'))
 
 
 def downgrade() -> None:

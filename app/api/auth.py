@@ -108,19 +108,20 @@ async def login(body: LoginRequest, response: Response, request: Request):
     if not result.session:
         raise HTTPException(status_code=401, detail="Login failed – invalid credentials")
 
-    # Verify user approval
+    # Verify user approval status before granting access
     from app.core.database import SessionLocal
     from app.models.database import Profile
-    db = SessionLocal()
+
+    _db = SessionLocal()
     try:
-        profile = db.query(Profile).filter(Profile.id == result.user.id).first()
+        profile = _db.query(Profile).filter(Profile.id == result.user.id).first()
         if profile and not profile.is_approved and not profile.is_admin:
             raise HTTPException(
                 status_code=403,
-                detail="Account pending approval. Please wait for an administrator to approve your access."
+                detail="Account pending approval. Please wait for an administrator to approve your access.",
             )
     finally:
-        db.close()
+        _db.close()
 
     token = result.session.access_token
 

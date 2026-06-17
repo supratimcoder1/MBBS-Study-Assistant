@@ -105,6 +105,34 @@ async def get_admin_users(
         raise HTTPException(status_code=500, detail="Failed to load user accounts")
 
 
+# ── POST /users/{user_id}/approve — Approve a pending user account ──────────
+@router.post("/users/{user_id}/approve")
+async def approve_user_account(
+    user_id: str,
+    admin_user: dict = Depends(verify_admin),
+    db: Session = Depends(get_db),
+):
+    """
+    Approve a pending user account so they can log in and use the platform.
+    Sets is_approved = True on the target profile.
+    """
+    target_profile = db.query(Profile).filter(Profile.id == user_id).first()
+    if not target_profile:
+        raise HTTPException(status_code=404, detail="User account not found")
+
+    if target_profile.is_approved:
+        return {"message": f"Account {target_profile.email} is already approved"}
+
+    target_profile.is_approved = True
+    db.commit()
+
+    logger.info(
+        "Admin %s approved user %s (%s)",
+        admin_user["email"], user_id, target_profile.email,
+    )
+    return {"message": f"Account {target_profile.email} approved successfully"}
+
+
 # ── DELETE /users/{user_id} ──────────────────────────────────────────────────
 @router.delete("/users/{user_id}")
 async def delete_user_account(
@@ -142,20 +170,3 @@ async def delete_user_account(
     except Exception as exc:
         logger.error("Error deleting user %s via admin: %s", user_id, exc)
         raise HTTPException(status_code=500, detail=f"Failed to terminate account: {exc}")
-
-
-# ── POST /users/{user_id}/approve ────────────────────────────────────────────
-@router.post("/users/{user_id}/approve")
-async def approve_user_account(
-    user_id: str,
-    admin_user: dict = Depends(verify_admin),
-    db: Session = Depends(get_db),
-):
-    """Administratively approve a pending user account."""
-    target_profile = db.query(Profile).filter(Profile.id == user_id).first()
-    if not target_profile:
-        raise HTTPException(status_code=404, detail="User account not found")
-    
-    target_profile.is_approved = True
-    db.commit()
-    return {"message": f"Account {target_profile.email} approved successfully"}

@@ -336,39 +336,40 @@ App.Dashboard = {
     });
   },
 
-  /** Load greeting based on time of day + profile */
+  /** Load greeting based on time of day + profile (Claude-style with study taglines) */
   async loadGreeting() {
     const hour = new Date().getHours();
-    let greeting = 'Good day';
-    let tagline = 'Loading study plan...';
+
+    // 10-slot schedule with study-relatable taglines
+    let greeting, tagline;
 
     if (hour >= 0 && hour < 1) {
       greeting = 'Happy midnight';
-      tagline = "Late night research session? Let's review the charts.";
+      tagline = 'Late night research session? Let\'s review the charts.';
     } else if (hour >= 1 && hour < 4) {
       greeting = 'Burning the midnight oil';
       tagline = 'Keep pushing, future doctor. What medical concept are we mastering tonight?';
     } else if (hour >= 4 && hour < 7) {
       greeting = 'Good early morning';
-      tagline = "Up early for clinical rounds? Let's get ahead of the curriculum.";
+      tagline = 'Up early for clinical rounds? Let\'s get ahead of the curriculum.';
     } else if (hour >= 7 && hour < 10) {
       greeting = 'Good morning';
-      tagline = "Ready to start your day? Let's tackle some high-yield study topics.";
+      tagline = 'Ready to start your day? Let\'s tackle some high-yield study topics.';
     } else if (hour >= 10 && hour < 12) {
       greeting = 'Good late morning';
-      tagline = "Before the noon lecture starts, let's review our medical textbook notes.";
+      tagline = 'Before the noon lecture starts, let\'s review our medical textbook notes.';
     } else if (hour >= 12 && hour < 13) {
       greeting = 'Happy noon';
       tagline = 'Time for a midday study break or a quick physiology review?';
     } else if (hour >= 13 && hour < 16) {
       greeting = 'Good afternoon';
-      tagline = "Let's keep the momentum going. What subject are we studying this afternoon?";
+      tagline = 'Let\'s keep the momentum going. What subject are we studying this afternoon?';
     } else if (hour >= 16 && hour < 18) {
       greeting = 'Good late afternoon';
       tagline = 'Classes are winding down. Perfect time for some pharmacology or anatomy review.';
     } else if (hour >= 18 && hour < 21) {
       greeting = 'Good evening';
-      tagline = "Winding down for the day? Let's consolidate our clinical knowledge.";
+      tagline = 'Winding down for the day? Let\'s consolidate our clinical knowledge.';
     } else {
       greeting = 'Good night';
       tagline = 'Reviewing before sleep is great for memory retention. What shall we look over?';
@@ -382,7 +383,9 @@ App.Dashboard = {
       const name = data.name || 'Student';
       document.getElementById('greeting-text').innerHTML =
         `${greeting}, <span>${App.Utils.escapeHtml(name)}</span>! 👋`;
-      document.getElementById('greeting-tagline').textContent = tagline;
+
+      const taglineEl = document.getElementById('greeting-tagline');
+      if (taglineEl) taglineEl.textContent = tagline;
 
       const yearSuffix = ['', '1st', '2nd', '3rd', '4th', '5th'];
       document.getElementById('greeting-year').textContent =
@@ -391,7 +394,8 @@ App.Dashboard = {
         `🎓 ${data.course || 'N/A'}`;
     } catch (e) {
       document.getElementById('greeting-text').innerHTML = `${greeting}! 👋`;
-      document.getElementById('greeting-tagline').textContent = tagline;
+      const taglineEl = document.getElementById('greeting-tagline');
+      if (taglineEl) taglineEl.textContent = tagline;
     }
   },
 
