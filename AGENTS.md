@@ -43,7 +43,7 @@ This file will track the different agents and subagents used in this project, or
   - Git & GitHub Integration: Initialized local Git repository, created `.gitignore`, established MIT LICENSE, pushed initial codebase and deployment optimizations to `https://github.com/supratimcoder1/MBBS-Study-Assistant.git`.
   - Cloud Deployment Optimization: Simplified `Dockerfile` (removed Tesseract/Ghostscript), updated `requirements.txt` (added `psycopg2-binary`, removed `ocrmypdf`), and updated `README.md` to reflect cloud-native hosting setup.
   - Implemented stronger password creation logic for new users (client and server-side complexity validation).
-  - Fixed Vercel deployment error (OSError: [Errno 30] Read-only file system: 'uploads') by dynamically setting UPLOADS_DIR to /tmp/uploads when running on Vercel.
+  - Reverted Vercel-specific workarounds and configurations in favor of deploying to Render.
   - Configured logo.png as the favicon across all templates (base, landing, login, and signup).
 
 ### Backend Builder (Subagent)

@@ -20,7 +20,7 @@ logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/subjects", tags=["subjects"])
 
 # Directory where uploaded PDFs are stored
-UPLOADS_DIR = Path("/tmp/uploads") if (os.environ.get("VERCEL") == "1" or os.path.exists("/var/task")) else Path("uploads")
+UPLOADS_DIR = Path("uploads")
 
 
 # ── GET / — List subjects ──────────────────────────────────────────────────

@@ -33,7 +33,7 @@ logger = logging.getLogger(__name__)
 BASE_DIR = Path(__file__).resolve().parent          # app/
 STATIC_DIR = BASE_DIR / "static"
 TEMPLATES_DIR = BASE_DIR / "templates"
-UPLOADS_DIR = Path("/tmp/uploads") if (os.environ.get("VERCEL") == "1" or os.path.exists("/var/task")) else Path("uploads")
+UPLOADS_DIR = Path("uploads")
 
 
 # ── Lifespan (startup / shutdown) ──────────────────────────────────────────
